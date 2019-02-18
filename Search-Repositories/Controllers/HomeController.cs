@@ -6,7 +6,9 @@ using System.Web.Mvc;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using Search_Repositories.Models;
+using Search_Repositories.Classes;
 
 namespace Search_Repositories.Controllers
 {
@@ -21,15 +23,26 @@ namespace Search_Repositories.Controllers
 
         [HttpGet]
         public ActionResult Index()
-        {
+        {     
             return View();
         }
+
+        [HttpPost]
+        [Route("")]
+        [Route("{repository}")]
+        public ActionResult BookmarkRepository(string repository)
+        {
+            Repository temp = JsonConvert.DeserializeObject<Repository>(repository);
+
+            return null;
+        }    
 
         [HttpPost]
         public async Task<ActionResult> GetRepositories(string RepoName)
         {
             string uri = "https://api.github.com/search/repositories?q=" + RepoName;
             string responseBody = "";
+            RepositoryModel repositoryModel = new RepositoryModel();
 
             try
             {
@@ -42,34 +55,24 @@ namespace Search_Repositories.Controllers
             }
             catch (HttpRequestException e)
             {
-
                 responseBody = e.Message;
+                ModelState.AddModelError("serverError", "Server Error");
+                return PartialView("_ViewRepositories", repositoryModel);
             }
 
             JObject responseObject = JObject.Parse(responseBody);
 
             JArray repositories = (JArray)responseObject["items"];
-
-            List<ShowrRpositoriesModel> list = new List<ShowrRpositoriesModel>();
-
+            
             if (repositories.HasValues)
             {
                 foreach (JObject repository in repositories)
                 {
-                    ShowrRpositoriesModel tempModel = new ShowrRpositoriesModel
-                    {
-                        RepositoryName = (String)repository.GetValue("name"),
-                        Avatar = (String)repository["owner"]["avatar_url"]
-                    };
-                    list.Add(tempModel);
+                    repositoryModel.RepositoriesList.Add(JsonConvert.DeserializeObject<Repository>(repository.ToString()));
                 }
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Search Repositories");
-            }
+            }   
 
-            return PartialView("_ViewRepositories", list);
+            return PartialView("_ViewRepositories", repositoryModel);
         }
     }
 }
