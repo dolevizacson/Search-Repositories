@@ -1,5 +1,5 @@
 ﻿@model Search_Repositories.Models.RepositoryModel
-@using Newtonsoft.Json;
+@using Search_Repositories.Classes;
 
 <div class="row">
 
@@ -8,16 +8,13 @@
         <div class="col-sm-6 col-md-4 col-lg-3">
             <div class="thumbnail" style="display:flex; flex-wrap:nowrap; flex-direction:column">
                 <div clas="thumbnail" style="display:flex; flex-wrap:nowrap; justify-content:center; background-color:#e7e7e7;padding:5px 0">
-                    <img src="@Html.DisplayFor(modelItem => repository.owner.avatar_url)" style="max-height:100px; max-width: 100px " />
+                    <img src="@Html.DisplayFor(modelItem => repository.Value.owner.avatar_url)" style="max-height:100px; max-width: 100px " />
                 </div>
                 <div class="caption" style="display:flex; justify-content:center">
-                    <h3>@Html.DisplayFor(modelItem => repository.name)</h3>
+                    <h3>@Html.DisplayFor(modelItem => repository.Value.name)</h3>
                 </div>
                 <div style="display:flex; justify-content:center">
-                    @Ajax.ActionLink("Bookmark Repository",
-                                        "BookmarkRepository",                                        
-                                        new { repository = JsonConvert.SerializeObject(repository) },
-                                        new AjaxOptions { HttpMethod = "POST"})
+                    @Ajax.ActionLink("Bookmark Repository", "AddRepositories/" + repository.Value.name , "Home", new AjaxOptions { HttpMethod = "POST"}, new { @class = "btn btn-primary"})
                 </div>
             </div>
         </div>

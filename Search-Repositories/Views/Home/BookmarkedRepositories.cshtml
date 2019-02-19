@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "BookmarkedRepositories";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Search_Repositories.Classes;
+
+@Html.ActionLink("Clear Session", "ClearSession", "Home", null, new { @class = "btn btn-danger", style = "margin:10px" })
+
+<div class="row">
+    @{
+        if (Session["repositoryList"] != null)
+        {
+            foreach (Repository repository in ((List<Repository>)Session["repositoryList"]))
+            {
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="thumbnail" style="display:flex; flex-wrap:nowrap; flex-direction:column">
+                        <div clas="thumbnail" style="display:flex; flex-wrap:nowrap; justify-content:center; background-color:#e7e7e7;padding:5px 0">
+                            <img src="@Html.DisplayFor(modelItem => repository.owner.avatar_url)" style="max-height:100px; max-width: 100px " />
+                        </div>
+                        <div class="caption" style="display:flex; justify-content:center">
+                            <h3>@Html.DisplayFor(modelItem => repository.name)</h3>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+
+
+</div>

@@ -15,6 +15,7 @@ namespace Search_Repositories.Controllers
     public class HomeController : Controller
     {
         private static readonly HttpClient httpClient;
+        private static RepositoryModel repositoryModel;
 
         static HomeController()
         {
@@ -25,24 +26,39 @@ namespace Search_Repositories.Controllers
         public ActionResult Index()
         {     
             return View();
+        }  
+
+        [HttpGet]
+        public ActionResult BookmarkedRepositories()
+        {            
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult ClearSession()
+        {
+            Session.Clear();
+            return RedirectToAction("BookmarkedRepositories", "Home");
         }
 
         [HttpPost]
-        [Route("")]
-        [Route("{repository}")]
-        public ActionResult BookmarkRepository(string repository)
+        public ActionResult AddRepositories(string id)
         {
-            Repository temp = JsonConvert.DeserializeObject<Repository>(repository);
-
+            if (Session["repositoryList"] == null)
+            {
+                Session["repositoryList"] = new List<Repository>();
+            }
+            ((List<Repository>)Session["repositoryList"]).Add(repositoryModel.RepositoriesList[id]);
+            
             return null;
-        }    
+        }
 
         [HttpPost]
         public async Task<ActionResult> GetRepositories(string RepoName)
         {
             string uri = "https://api.github.com/search/repositories?q=" + RepoName;
             string responseBody = "";
-            RepositoryModel repositoryModel = new RepositoryModel();
+            repositoryModel = new RepositoryModel();
 
             try
             {
@@ -68,7 +84,8 @@ namespace Search_Repositories.Controllers
             {
                 foreach (JObject repository in repositories)
                 {
-                    repositoryModel.RepositoriesList.Add(JsonConvert.DeserializeObject<Repository>(repository.ToString()));
+                    Repository tempRepository = JsonConvert.DeserializeObject<Repository>(repository.ToString());
+                    repositoryModel.RepositoriesList[tempRepository.name]= tempRepository;
                 }
             }   
 

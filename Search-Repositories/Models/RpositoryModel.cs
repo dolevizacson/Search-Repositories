@@ -10,9 +10,9 @@ namespace Search_Repositories.Models
     {
         public RepositoryModel()
         {
-            this.RepositoriesList = new List<Repository>();
+            this.RepositoriesList = new Dictionary<string, Repository>();
         }
 
-        public List<Repository> RepositoriesList { get; set; }
+        public Dictionary<string, Repository> RepositoriesList { get; set; }
     }
 }
