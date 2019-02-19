@@ -14,7 +14,7 @@
                     <h3>@Html.DisplayFor(modelItem => repository.Value.name)</h3>
                 </div>
                 <div style="display:flex; justify-content:center">
-                    @Ajax.ActionLink("Bookmark Repository", "AddRepositories/" + repository.Value.name , "Home", new AjaxOptions { HttpMethod = "POST"}, new { @class = "btn btn-primary"})
+                    @Ajax.ActionLink("Bookmark Repository", "AddRepositories/" + repository.Value.id , "Home", new AjaxOptions { HttpMethod = "POST"}, new { @class = "btn btn-primary"})
                 </div>
             </div>
         </div>

@@ -42,7 +42,7 @@ namespace Search_Repositories.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddRepositories(string id)
+        public ActionResult AddRepositories(int id)
         {
             if (Session["repositoryList"] == null)
             {
@@ -85,7 +85,7 @@ namespace Search_Repositories.Controllers
                 foreach (JObject repository in repositories)
                 {
                     Repository tempRepository = JsonConvert.DeserializeObject<Repository>(repository.ToString());
-                    repositoryModel.RepositoriesList[tempRepository.name]= tempRepository;
+                    repositoryModel.RepositoriesList[tempRepository.id]= tempRepository;
                 }
             }   
 
